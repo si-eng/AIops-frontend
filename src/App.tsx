@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+const BASE_URL = "https://aiops-backend-production-4d5e.up.railway.app";
+
 function App() {
   const [logs, setLogs] = useState<any[]>([]);
   const [status, setStatus] = useState<any>(null);
@@ -11,10 +13,10 @@ function App() {
   // -----------------------------
   const fetchLogs = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/logs");
+      const res = await fetch(`${BASE_URL}/logs`);
       const data = await res.json();
 
-      console.log("LOGS:", data); // 🔥 DEBUG
+      console.log("LOGS:", data);
 
       setLogs(data);
     } catch (err) {
@@ -27,10 +29,10 @@ function App() {
   // -----------------------------
   const fetchStatus = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/status");
+      const res = await fetch(`${BASE_URL}/status`);
       const data = await res.json();
 
-      console.log("STATUS:", data); // 🔥 DEBUG
+      console.log("STATUS:", data);
 
       setStatus(data);
     } catch (err) {
@@ -45,7 +47,7 @@ function App() {
     if (!query.trim()) return;
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/chat", {
+      const res = await fetch(`${BASE_URL}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,9 +57,9 @@ function App() {
 
       const data = await res.json();
 
-      console.log("CHAT:", data); // 🔥 DEBUG
+      console.log("CHAT:", data);
 
-      setResponse(data);
+      setResponse(data.analysis); // ✅ FIXED (matches backend)
       setQuery("");
     } catch (err) {
       console.error("Chat error:", err);
@@ -109,18 +111,10 @@ function App() {
       {/* RESPONSE */}
       {response && (
         <div style={{ marginTop: "15px", background: "#222", padding: "10px" }}>
-          <h3>AI Response</h3>
-          <p><b>Answer:</b> {response.answer}</p>
+          <h3>AI Analysis</h3>
+          <p><b>Issue:</b> {response.issue}</p>
+          <p><b>Root Cause:</b> {response.root_cause}</p>
           <p><b>Suggestion:</b> {response.suggestion}</p>
-
-          <h4>Incidents:</h4>
-          {response.incidents?.length === 0 && <p>No incidents</p>}
-
-          {response.incidents?.map((inc: any, i: number) => (
-            <div key={i}>
-              <p>{inc.type} - {inc.message}</p>
-            </div>
-          ))}
         </div>
       )}
 
