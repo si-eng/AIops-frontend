@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const BASE_URL = "https://aiops-backend-production-4d5e.up.railway.app";
+const BASE_URL = "https://a-iops-backend.vercel.app";
 
 function App() {
   const [logs, setLogs] = useState<any[]>([]);
@@ -8,41 +8,26 @@ function App() {
   const [query, setQuery] = useState("");
   const [response, setResponse] = useState<any>(null);
 
-  // -----------------------------
-  // Fetch Logs
-  // -----------------------------
   const fetchLogs = async () => {
     try {
       const res = await fetch(`${BASE_URL}/logs`);
       const data = await res.json();
-
-      console.log("LOGS:", data);
-
       setLogs(data);
     } catch (err) {
-      console.error("Logs error:", err);
+      console.error(err);
     }
   };
 
-  // -----------------------------
-  // Fetch Status
-  // -----------------------------
   const fetchStatus = async () => {
     try {
       const res = await fetch(`${BASE_URL}/status`);
       const data = await res.json();
-
-      console.log("STATUS:", data);
-
       setStatus(data);
     } catch (err) {
-      console.error("Status error:", err);
+      console.error(err);
     }
   };
 
-  // -----------------------------
-  // Chat
-  // -----------------------------
   const sendQuery = async () => {
     if (!query.trim()) return;
 
@@ -56,19 +41,13 @@ function App() {
       });
 
       const data = await res.json();
-
-      console.log("CHAT:", data);
-
-      setResponse(data.analysis); // ✅ FIXED (matches backend)
+      setResponse(data.analysis);
       setQuery("");
     } catch (err) {
-      console.error("Chat error:", err);
+      console.error(err);
     }
   };
 
-  // -----------------------------
-  // Load data
-  // -----------------------------
   useEffect(() => {
     fetchLogs();
     fetchStatus();
@@ -85,7 +64,6 @@ function App() {
     <div style={{ padding: "20px", color: "white" }}>
       <h1>🚀 AIOps Dashboard</h1>
 
-      {/* STATUS */}
       <h2>Status</h2>
       {status ? (
         <div>
@@ -96,21 +74,16 @@ function App() {
         <p>Loading status...</p>
       )}
 
-      {/* CHAT */}
       <h2>Ask AIOps</h2>
       <input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Why is system slow?"
-        style={{ padding: "8px", width: "300px" }}
       />
-      <button onClick={sendQuery} style={{ marginLeft: "10px" }}>
-        Ask
-      </button>
+      <button onClick={sendQuery}>Ask</button>
 
-      {/* RESPONSE */}
       {response && (
-        <div style={{ marginTop: "15px", background: "#222", padding: "10px" }}>
+        <div>
           <h3>AI Analysis</h3>
           <p><b>Issue:</b> {response.issue}</p>
           <p><b>Root Cause:</b> {response.root_cause}</p>
@@ -118,13 +91,11 @@ function App() {
         </div>
       )}
 
-      {/* LOGS */}
       <h2>Logs</h2>
-
       {logs.length === 0 ? (
         <p>Loading logs...</p>
       ) : (
-        <table border={1} cellPadding={5}>
+        <table border={1}>
           <thead>
             <tr>
               <th>Time</th>
@@ -139,7 +110,7 @@ function App() {
                 <td>{log.timestamp}</td>
                 <td>{log.level}</td>
                 <td>{log.message}</td>
-                <td>{log.latency_ms} ms</td>
+                <td>{log.latency_ms}</td>
               </tr>
             ))}
           </tbody>
