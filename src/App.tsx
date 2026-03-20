@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const [logs, setLogs] = useState<any[]>([]);
@@ -151,6 +152,7 @@ function App() {
           </tbody>
         </table>
       )}
+      <Analytics />
     </div>
   );
 }
