@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 const BASE_URL = "https://a-iops-backend.vercel.app";
 
@@ -116,6 +117,7 @@ function App() {
           </tbody>
         </table>
       )}
+      <Analytics />
     </div>
   );
 }
